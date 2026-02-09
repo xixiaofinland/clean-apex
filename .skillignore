@@ -1,0 +1,101 @@
+# .skillignore
+# Excludes files from skill package distribution
+# Similar to .gitignore but for skill packaging
+
+# Git metadata
+.git/
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Test output and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage/
+test-output/
+*.log
+
+# Compiled Java class files
+*.class
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+secrets.json
+config.local.*
+
+# Lock files (development only)
+package-lock.json
+yarn.lock
+Pipfile.lock
+poetry.lock
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Documentation build artifacts
+docs/_build/
+site/
+
+# OS-specific files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Keep these essential files for skill distribution:
+# LICENSE
+# CHANGELOG.md
+# README.md
+# SKILL.md
+# templates/
+# references/
+# examples-sanitized/
+# hooks/
+# agents/
+# GLOSSARY.md
+# .skillignore (this file)
