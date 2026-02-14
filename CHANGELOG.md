@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **BREAKING**: Async templates refactored to demonstrate proper 3-tier architecture
+  - `CleanOrderAsyncBatch.cls` no longer chains to queueable (calls service directly)
+  - `CleanOrderAsyncService.cls` now delegates to `CleanOrdersProcessor` (OO layer)
+  - Batch and queueable are now separate, independent entry-point examples
+  - Both batch and queueable share the same service and OO layers
+
+### Added
+- `CleanOrdersProcessor.cls` - OO layer template for bulk order processing (plural naming for collections)
+- `CleanOrdersProcessorTest.cls` - Unit test template for processor (no DML)
+- `OrdersProcessor.cls` in examples-sanitized
+- Naming convention clarification: OO classes handling collections use plural names
+
 ## [1.0.0] - 2026-02-09
 
 ### Added

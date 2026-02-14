@@ -6,14 +6,14 @@
  * Layer: entry-point
  * Purpose: Queueable job entry-point for async order processing
  * Usage Pattern: Queueable
- * Dependencies: CleanOrderAsyncService
+ * Dependencies: CleanOrderAsyncService, CleanOrdersProcessor
  *
  * INSTRUCTIONS:
  * 1. Replace "CleanOrder" with your entity name
  * 2. Pass necessary context via constructor (IDs, parameters, etc.)
  * 3. Implement execute() to delegate work to service layer
- * 4. Consider chaining queueables if more work remains (System.enqueueJob in execute)
- * 5. Keep this class thin - all logic in service layer
+ * 4. Keep this class thin - all logic in service layer
+ * 5. Use queueable for: on-demand async, HTTP callouts, or dynamic job scheduling
  * 6. Remove this header once customized
  */
 public with sharing class CleanOrderAsyncQueueable implements Queueable {

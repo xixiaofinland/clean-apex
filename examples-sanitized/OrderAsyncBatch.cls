@@ -8,7 +8,7 @@ global with sharing class OrderAsyncBatch implements Database.Batchable<SObject>
         for (SObject row : scope) {
             orderIds.add((Id) row.get('Id'));
         }
-        System.enqueueJob(new OrderAsyncQueueable(orderIds));
+        OrderAsyncService.processOrders(orderIds);
     }
 
     global void finish(Database.BatchableContext context) {

@@ -4,7 +4,7 @@ public with sharing class OrderAsyncService {
             SELECT Id
             FROM Opportunity
             WHERE StageName != 'Closed Won'
-            LIMIT 200
+            LIMIT 10000
         ]);
     }
 
@@ -13,14 +13,15 @@ public with sharing class OrderAsyncService {
             return;
         }
 
-        List<Opportunity> recordsToUpdate = [
-            SELECT Id, Description
+        List<Opportunity> orders = [
+            SELECT Id, Name, Description
             FROM Opportunity
             WHERE Id IN :orderIds
         ];
-        for (Opportunity record : recordsToUpdate) {
-            record.Description = 'Queued follow-up scheduled.';
-        }
-        update recordsToUpdate;
+        
+        OrdersProcessor processor = new OrdersProcessor(orders);
+        List<Opportunity> processedOrders = processor.process();
+        
+        update processedOrders;
     }
 }

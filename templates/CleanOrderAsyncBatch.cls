@@ -6,12 +6,12 @@
  * Layer: entry-point
  * Purpose: Batch job entry-point for async order processing
  * Usage Pattern: Batch
- * Dependencies: CleanOrderAsyncService, CleanOrderAsyncQueueable
+ * Dependencies: CleanOrderAsyncService, CleanOrdersProcessor
  *
  * INSTRUCTIONS:
  * 1. Replace "CleanOrder" with your entity name
  * 2. Update start() to query records for processing
- * 3. Implement execute() to delegate work (consider chaining to Queueable for more CPU time)
+ * 3. Implement execute() to delegate work to service layer
  * 4. Add error handling in finish() if needed
  * 5. Keep this class thin - delegate logic to service layer
  * 6. Remove this header once customized
@@ -26,7 +26,7 @@ global with sharing class CleanOrderAsyncBatch implements Database.Batchable<SOb
         for (SObject row : scope) {
             orderIds.add((Id) row.get('Id'));
         }
-        System.enqueueJob(new CleanOrderAsyncQueueable(orderIds));
+        CleanOrderAsyncService.processOrders(orderIds);
     }
 
     global void finish(Database.BatchableContext context) {

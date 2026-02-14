@@ -6,7 +6,7 @@
  * Layer: service
  * Purpose: Business logic and DML for async batch/queueable operations
  * Usage Pattern: Async Service
- * Dependencies: None (or OO classes if complex transformations needed)
+ * Dependencies: CleanOrdersProcessor
  *
  * INSTRUCTIONS:
  * 1. Replace "CleanOrder" with your entity name
@@ -22,7 +22,7 @@ public with sharing class CleanOrderAsyncService {
             SELECT Id
             FROM Opportunity
             WHERE StageName != 'Closed Won'
-            LIMIT 200
+            LIMIT 10000
         ]);
     }
 
@@ -31,14 +31,15 @@ public with sharing class CleanOrderAsyncService {
             return;
         }
 
-        List<Opportunity> recordsToUpdate = [
-            SELECT Id, Description
+        List<Opportunity> orders = [
+            SELECT Id, Name, Description
             FROM Opportunity
             WHERE Id IN :orderIds
         ];
-        for (Opportunity record : recordsToUpdate) {
-            record.Description = 'Queued follow-up scheduled.';
-        }
-        update recordsToUpdate;
+        
+        CleanOrdersProcessor processor = new CleanOrdersProcessor(orders);
+        List<Opportunity> processedOrders = processor.process();
+        
+        update processedOrders;
     }
 }

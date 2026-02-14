@@ -7,18 +7,20 @@ This file provides a comprehensive guide to all templates in the clean-apex skil
 | Template | Layer | Purpose | Typical Pair |
 |----------|-------|---------|--------------|
 | CleanOrderApi.cls | entry-point | REST API endpoint | CleanOrderService |
-| CleanOrderAsyncBatch.cls | entry-point | Batch job entry-point | CleanOrderAsyncService + CleanOrderAsyncQueueable |
-| CleanOrderAsyncQueueable.cls | entry-point | Queueable job entry-point | CleanOrderAsyncService |
+| CleanOrderAsyncBatch.cls | entry-point | Batch job entry-point | CleanOrderAsyncService + CleanOrdersProcessor |
+| CleanOrderAsyncQueueable.cls | entry-point | Queueable job entry-point | CleanOrderAsyncService + CleanOrdersProcessor |
 | CleanOrderTrigger.trigger | entry-point | Trigger entry-point | CleanOrderTriggerAction |
 | CleanOrderService.cls | service | Business logic + DML | CleanOrderBuilder + CleanOrderPricingSelector |
-| CleanOrderAsyncService.cls | service | Async processing logic + DML | Batch/Queueable entry-points |
+| CleanOrderAsyncService.cls | service | Async processing logic + DML | CleanOrdersProcessor |
 | CleanOrderTriggerService.cls | service | Trigger business logic | CleanOrderNameNormalizer |
 | CleanOrderBuilder.cls | oo | Domain object builder | CleanOrderService + CleanOrderPricingSelector |
 | CleanOrderNameNormalizer.cls | oo | Data transformation logic | CleanOrderTriggerService |
+| CleanOrdersProcessor.cls | oo | Bulk order processing logic | CleanOrderAsyncService |
 | CleanOrderTriggerAction.cls | entry-point | Trigger action router | CleanOrderTriggerService |
 | CleanOrderPricingSelector.cls | selector | SOQL query layer | CleanOrderBuilder (injected) |
 | CleanOrderBuilderTest.cls | test | OO unit test (no DML) | CleanOrderBuilder |
 | CleanOrderNameNormalizerTest.cls | test | OO unit test (no DML) | CleanOrderNameNormalizer |
+| CleanOrdersProcessorTest.cls | test | OO unit test (no DML) | CleanOrdersProcessor |
 | CleanOrderServiceIntegrationTest.cls | test | Service integration test (DML) | CleanOrderService |
 | CleanOrderTriggerIntegrationTest.cls | test | Trigger integration test (DML) | CleanOrderTrigger |
 
@@ -76,15 +78,19 @@ Pattern packs group related templates for common scenarios.
 
 **Flow**: REST endpoint → Service method → Builder → Selector (injected)
 
-### Batch/Queueable Async Pattern Pack
-**Use when**: Building async batch or queueable jobs
+### Async Processing Pattern Pack
+**Use when**: Building batch or queueable jobs for async operations
 
 **Templates**:
-1. `CleanOrderAsyncBatch.cls` (entry-point) - Batch job entry
-2. `CleanOrderAsyncQueueable.cls` (entry-point) - Queueable for chaining
+1. `CleanOrderAsyncBatch.cls` (entry-point) - Batch job for scheduled/large-scale processing
+2. `CleanOrderAsyncQueueable.cls` (entry-point) - Queueable for on-demand/chainable processing
 3. `CleanOrderAsyncService.cls` (service) - Async processing logic with DML
+4. `CleanOrdersProcessor.cls` (oo) - Bulk data transformation and business logic
+5. `CleanOrdersProcessorTest.cls` (test) - Unit test for processor (no DML)
 
-**Flow**: Batch start/execute → Queueable (optional chain) → Async service logic
+**Flow**: Batch OR Queueable → Async Service → Processor (OO)
+
+**Note**: Batch and queueable are separate entry-point examples that share the same service and OO layers. Choose based on your trigger type (scheduled vs on-demand), not performance optimization. Both demonstrate proper 3-tier architecture.
 
 ### Trigger/Action Pattern Pack
 **Use when**: Building trigger handlers
