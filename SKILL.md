@@ -19,14 +19,6 @@ platforms:
   - claude-code
   - codex
   - github-copilot
-hooks:
-  PostToolUse:
-    - matcher: "Write|Edit"
-      hooks:
-        - type: command
-          command: "python3 ${SKILL_HOOKS}/clean-apex-validate.py"
-          timeout: 15000
-  on_error: "advisory"
 ---
 
 # clean-apex
@@ -50,26 +42,6 @@ Read these files before doing any work:
 4. Enforce 3-tier responsibilities from `references/architecture.md`.
 5. Apply error handling from `references/error-handling.md`.
 6. Apply SOQL + DI constraints and test rules from `references/soql-di.md`.
-
-## Validation Mode
-
-Use `hooks/scripts/clean-apex-validate.py` as an advisory validator for naming, layering, DI, error handling, and comment hygiene.
-
-- If the host CLI supports skill hooks, run validation automatically after file write/edit.
-- If the host CLI does not support hooks, run validation manually.
-
-Manual fallback example:
-- `echo '{"tool_input":{"file_path":"force-app/main/default/classes/MyClass.cls"}}' | python3 hooks/scripts/clean-apex-validate.py`
-
-Validation output is advisory by default and does not block file changes.
-
-## Hook Compatibility
-
-Treat frontmatter hook definitions as optional accelerators, not a hard dependency.
-
-- Supported runtimes execute `PostToolUse` automatically.
-- Unsupported runtimes ignore hook config; core clean-apex guidance still works.
-- Keep a manual validator path so behavior stays portable across CLIs.
 
 ## Generation Mode
 
