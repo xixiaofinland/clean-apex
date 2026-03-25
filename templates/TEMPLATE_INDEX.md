@@ -4,29 +4,30 @@ This file provides a comprehensive guide to all templates in the clean-apex skil
 
 ## Quick Reference Table
 
-| Template | Layer | Purpose | Typical Pair |
-|----------|-------|---------|--------------|
-| CleanOrderApi.cls | entry-point | REST API endpoint | CleanOrderService |
-| CleanOrderAsyncBatch.cls | entry-point | Batch job entry-point | CleanOrderAsyncService + CleanOrdersProcessor |
-| CleanOrderAsyncQueueable.cls | entry-point | Queueable job entry-point | CleanOrderAsyncService + CleanOrdersProcessor |
-| CleanOrderTrigger.trigger | entry-point | Trigger entry-point | CleanOrderTriggerAction |
-| CleanOrderService.cls | service | Business logic + DML | CleanOrderBuilder + CleanOrderPricingSelector |
-| CleanOrderAsyncService.cls | service | Async processing logic + DML | CleanOrdersProcessor |
-| CleanOrderTriggerService.cls | service | Trigger business logic | CleanOrderNameNormalizer |
-| CleanOrderBuilder.cls | oo | Domain object builder | CleanOrderService + CleanOrderPricingSelector |
-| CleanOrderNameNormalizer.cls | oo | Data transformation logic | CleanOrderTriggerService |
-| CleanOrdersProcessor.cls | oo | Bulk order processing logic | CleanOrderAsyncService |
-| CleanOrderTriggerAction.cls | entry-point | Trigger action router | CleanOrderTriggerService |
-| CleanOrderPricingSelector.cls | selector | SOQL query layer | CleanOrderBuilder (injected) |
-| CleanOrderBuilderTest.cls | test | OO unit test (no DML) | CleanOrderBuilder |
-| CleanOrderNameNormalizerTest.cls | test | OO unit test (no DML) | CleanOrderNameNormalizer |
-| CleanOrdersProcessorTest.cls | test | OO unit test (no DML) | CleanOrdersProcessor |
-| CleanOrderServiceIntegrationTest.cls | test | Service integration test (DML) | CleanOrderService |
-| CleanOrderTriggerIntegrationTest.cls | test | Trigger integration test (DML) | CleanOrderTrigger |
+| Template                             | Layer       | Purpose                        | Typical Pair                                  |
+| ------------------------------------ | ----------- | ------------------------------ | --------------------------------------------- |
+| CleanOrderApi.cls                    | entry-point | REST API endpoint              | CleanOrderService                             |
+| CleanOrderAsyncBatch.cls             | entry-point | Batch job entry-point          | CleanOrderAsyncService + CleanOrdersProcessor |
+| CleanOrderAsyncQueueable.cls         | entry-point | Queueable job entry-point      | CleanOrderAsyncService + CleanOrdersProcessor |
+| CleanOrderTrigger.trigger            | entry-point | Trigger entry-point            | CleanOrderTriggerAction                       |
+| CleanOrderService.cls                | service     | Business logic + DML           | CleanOrderBuilder + CleanOrderPricingSelector |
+| CleanOrderAsyncService.cls           | service     | Async processing logic + DML   | CleanOrdersProcessor                          |
+| CleanOrderTriggerService.cls         | service     | Trigger business logic         | CleanOrderNameNormalizer                      |
+| CleanOrderBuilder.cls                | oo          | Domain object builder          | CleanOrderService + CleanOrderPricingSelector |
+| CleanOrderNameNormalizer.cls         | oo          | Data transformation logic      | CleanOrderTriggerService                      |
+| CleanOrdersProcessor.cls             | oo          | Bulk order processing logic    | CleanOrderAsyncService                        |
+| CleanOrderTriggerAction.cls          | entry-point | Trigger action router          | CleanOrderTriggerService                      |
+| CleanOrderPricingSelector.cls        | selector    | SOQL query layer               | CleanOrderBuilder (injected)                  |
+| CleanOrderBuilderTest.cls            | test        | OO unit test (no DML)          | CleanOrderBuilder                             |
+| CleanOrderNameNormalizerTest.cls     | test        | OO unit test (no DML)          | CleanOrderNameNormalizer                      |
+| CleanOrdersProcessorTest.cls         | test        | OO unit test (no DML)          | CleanOrdersProcessor                          |
+| CleanOrderServiceIntegrationTest.cls | test        | Service integration test (DML) | CleanOrderService                             |
+| CleanOrderTriggerIntegrationTest.cls | test        | Trigger integration test (DML) | CleanOrderTrigger                             |
 
 ## Layers
 
 ### Entry-Point Layer
+
 Entry-points receive external requests and delegate to the service layer. They handle error boundaries.
 
 - **CleanOrderApi.cls** - REST API endpoint with @RestResource
@@ -36,6 +37,7 @@ Entry-points receive external requests and delegate to the service layer. They h
 - **CleanOrderTriggerAction.cls** - Trigger action router (technically entry-point)
 
 ### Service Layer (Static)
+
 Service classes contain business logic orchestration and DML operations.
 
 - **CleanOrderService.cls** - Core business logic with DML (insert/update/delete)
@@ -43,17 +45,20 @@ Service classes contain business logic orchestration and DML operations.
 - **CleanOrderTriggerService.cls** - Trigger-specific business logic
 
 ### OO Layer
+
 Object-oriented classes encapsulate data and behavior without DML.
 
 - **CleanOrderBuilder.cls** - Builder pattern for constructing sObjects
 - **CleanOrderNameNormalizer.cls** - Data transformation and normalization
 
 ### Selector/Query Layer
+
 Selectors isolate SOQL queries for dependency injection and testing.
 
 - **CleanOrderPricingSelector.cls** - Query layer for pricing data
 
 ### Test Layer
+
 Test classes cover business logic (unit tests) and database operations (integration tests).
 
 - **CleanOrderBuilderTest.cls** - Unit test for builder (no DML, mocked selectors)
@@ -66,9 +71,11 @@ Test classes cover business logic (unit tests) and database operations (integrat
 Pattern packs group related templates for common scenarios.
 
 ### REST API Pattern Pack
+
 **Use when**: Building a REST API endpoint
 
 **Templates**:
+
 1. `CleanOrderApi.cls` (entry-point) - Handles HTTP request/response
 2. `CleanOrderService.cls` (service) - Business logic and DML
 3. `CleanOrderBuilder.cls` (oo) - Builds domain objects
@@ -79,9 +86,11 @@ Pattern packs group related templates for common scenarios.
 **Flow**: REST endpoint → Service method → Builder → Selector (injected)
 
 ### Async Processing Pattern Pack
+
 **Use when**: Building batch or queueable jobs for async operations
 
 **Templates**:
+
 1. `CleanOrderAsyncBatch.cls` (entry-point) - Batch job for scheduled/large-scale processing
 2. `CleanOrderAsyncQueueable.cls` (entry-point) - Queueable for on-demand/chainable processing
 3. `CleanOrderAsyncService.cls` (service) - Async processing logic with DML
@@ -93,9 +102,11 @@ Pattern packs group related templates for common scenarios.
 **Note**: Batch and queueable are separate entry-point examples that share the same service and OO layers. Choose based on your trigger type (scheduled vs on-demand), not performance optimization. Both demonstrate proper 3-tier architecture.
 
 ### Trigger/Action Pattern Pack
+
 **Use when**: Building trigger handlers
 
 **Templates**:
+
 1. `CleanOrderTrigger.trigger` (entry-point) - Trigger definition
 2. `CleanOrderTriggerAction.cls` (entry-point) - Action router
 3. `CleanOrderTriggerService.cls` (service) - Trigger business logic
@@ -140,14 +151,11 @@ For each template you use:
 3. **Update field assignments** for your sObject
 4. **Customize business logic** for your use case
 5. **Remove the metadata header** after customization
-6. **Run the validator** to check compliance:
-   ```bash
-   echo '{"tool_input":{"file_path":"YOUR_FILE.cls"}}' | python3 hooks/scripts/clean-apex-validate.py
-   ```
 
 ### Template Metadata Headers
 
 All templates include a metadata header:
+
 ```apex
 /**
  * TEMPLATE METADATA - DO NOT REMOVE
@@ -206,8 +214,6 @@ To contribute a new template:
 4. **Add to this index**: Update Quick Reference Table and appropriate section
 5. **Document pattern pack**: If template is part of a pattern, document the flow
 6. **Add suppression**: Include `clean-apex: allow=AUTO_JAVADOC` in header
-7. **Test the template**: Ensure it validates with the validator
-8. **Update CHANGELOG.md**: Add entry under `[Unreleased]`
 
 ### Template Contribution Checklist
 
@@ -216,11 +222,9 @@ To contribute a new template:
 - [ ] Layer classification clear (entry-point, service, oo, selector, test)
 - [ ] Dependencies documented in header
 - [ ] Customization instructions in header
-- [ ] Template validates (or has appropriate suppressions)
 - [ ] Added to Quick Reference Table
 - [ ] Added to appropriate Layer section
 - [ ] Pattern pack documented if applicable
-- [ ] CHANGELOG.md updated
 
 ## Template Maintenance
 
@@ -229,8 +233,6 @@ When updating templates:
 - Maintain backward compatibility where possible
 - Update metadata header if purpose/dependencies change
 - Bump skill version in SKILL.md if templates change significantly
-- Document changes in CHANGELOG.md
-- Verify all templates still validate
 
 ## Notes
 

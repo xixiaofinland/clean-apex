@@ -89,13 +89,9 @@ $RECYCLE.BIN/
 
 # Keep these essential files for skill distribution:
 # LICENSE
-# CHANGELOG.md
 # README.md
 # SKILL.md
 # templates/
 # references/
 # examples-sanitized/
-# hooks/
-# agents/
-# GLOSSARY.md
 # .skillignore (this file)

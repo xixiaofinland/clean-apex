@@ -13,7 +13,6 @@ keywords:
 capabilities:
   - code_review
   - code_generation
-  - validation
   - architecture_guidance
 platforms:
   - claude-code
@@ -28,6 +27,7 @@ Provide opinionated, minimal clean-code guidance for Apex. Focus on readability,
 ## Load References
 
 Read these files before doing any work:
+
 - `references/naming-conventions.md`
 - `references/architecture.md`
 - `references/error-handling.md`

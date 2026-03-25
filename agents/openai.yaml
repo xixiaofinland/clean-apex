@@ -1,4 +1,0 @@
-interface:
-  display_name: "Clean Apex"
-  short_description: "Readable, layered Apex clean-code guidance"
-  default_prompt: "Use $clean-apex to review and refactor this Apex code for naming, layering, DI, and test boundaries."
